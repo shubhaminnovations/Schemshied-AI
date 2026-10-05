@@ -1,1 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>ScamShield AI</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f7fb;
+    color: #172033;
+}
+
+header {
+    background: #0b1f3a;
+    color: white;
+    padding: 22px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #38bdf8;
+}
+
+header p {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.hero {
+    text-align: center;
+    padding: 55px 20px 35px;
+}
+
+.hero h1 {
+    font-size: 42px;
+    margin-bottom: 12px;
+}
+
+.hero h1 span {
+    color: #087fce;
+}
+
+.hero p {
+    color: #64748b;
+    font-size: 17px;
+}
+
+.container {
+    max-width: 1050px;
+    margin: auto;
+    padding: 20px;
+}
+
+.scanner {
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.tab {
+    padding: 12px 20px;
+    border: 1px solid #d7dee8;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.tab.active {
+    background: #087fce;
+    color: white;
+}
+
+.input-area {
+    width: 100%;
+    min-height: 130px;
+    padding: 16px;
+    border: 2px solid #dce3ec;
+    border-radius: 12px;
+    resize: vertical;
+    font-size: 16px;
+    outline: none;
+}
+
+.input-area:focus {
+    border-color: #087fce;
+}
+
+.analyze {
+    margin-top: 15px;
+    padding: 14px 28px;
+    background: #087fce;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.analyze:hover {
+    background: #0566a6;
+}
+
+.result {
+    display: none;
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 15px;
+    background: #fff5f5;
+    border: 1px solid #ffcccc;
+}
+
+.score {
+    font-size: 40px;
+    font-weight: bold;
+    color: #dc2626;
+    margin: 10px 0;
+}
+
+.badge {
+    display: inline-block;
+    background: #dc2626;
+    color: white;
+    padding: 7px 13px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.result ul {
+    margin: 15px 0 15px 22px;
+    line-height: 1.8;
+}
+
+.recommendation {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 25px;
+}
+
+.stat {
+    background: white;
+    padding: 22px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.stat h2 {
+    color: #087fce;
+    font-size: 30px;
+}
+
+.stat p {
+    color: #64748b;
+    margin-top: 5px;
+}
+
+footer {
+    text-align: center;
+    padding: 35px;
+    margin-top: 40px;
+    background: #0b1f3a;
+    color: white;
+}
+
+@media(max-width:700px) {
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🛡️ ScamShield <span>AI</span></div>
+    <p>Detect. Understand. Protect.</p>
+</header>
+
+<section class="hero">
+    <h1>Stay Safe From <span>Online Scams</span></h1>
+    <p>AI-powered scam detection for messages, links and suspicious content.</p>
+</section>
+
+<div class="container">
+
+    <div class="scanner">
+
+        <div class="tabs">
+            <button class="tab active" onclick="selectMode('message', this)">
+                💬 Message Scanner
+            </button>
+
+            <button class="tab" onclick="selectMode('url', this)">
+                🔗 URL Scanner
+            </button>
+        </div>
+
+        <textarea
+            id="inputText"
+            class="input-area"
+            placeholder="Paste a suspicious message here..."
+        ></textarea>
+
+        <button class="analyze" onclick="analyze()">
+            🔍 Analyze With ScamShield AI
+        </button>
+
+        <div id="result" class="result">
+
+            <span class="badge">🚨 HIGH RISK</span>
+
+            <div class="score" id="score">94/100</div>
+
+            <h2 id="scamType">Possible Scam Detected</h2>
+
+            <h3 style="margin-top:18px;">Why is this suspicious?</h3>
+
+            <ul id="reasons">
+                <li>Urgency-based language detected</li>
+                <li>Payment or personal information requested</li>
+                <li>Suspicious communication pattern</li>
+            </ul>
+
+            <div class="recommendation">
+                <h3>🛡️ Recommended Action</h3>
+                <p style="margin-top:8px;">
+                    ❌ Don't click suspicious links<br>
+                    ❌ Don't share OTP, PIN or passwords<br>
+                    ❌ Don't send money<br>
+                    ✅ Verify the sender through an official source
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="stats">
+
+        <div class="stat">
+            <h2>1,245+</h2>
+            <p>Scans</p>
+        </div>
+
+        <div class="stat">
+            <h2>327</h2>
+            <p>Threats Detected</p>
+        </div>
+
+        <div class="stat">
+            <h2>94%</h2>
+            <p>Detection Accuracy*</p>
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    <h3>🛡️ ScamShield AI</h3>
+    <p style="margin-top:8px;">
+        Detect. Understand. Protect.
+    </p>
+    <p style="margin-top:15px;font-size:12px;">
+        Hackathon Prototype — THINK BEYOND 2026
+    </p>
+</footer>
+
+<script>
+
+let currentMode = "message";
+
+function selectMode(mode, button) {
+
+    currentMode = mode;
+
+    document.querySelectorAll(".tab").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    const input = document.getElementById("inputText");
+
+    if (mode === "url") {
+        input.placeholder = "Paste a suspicious URL here...";
+    } else {
+        input.placeholder = "Paste a suspicious message here...";
+    }
+
+    document.getElementById("result").style.display = "none";
+}
+
+function analyze() {
+
+    const text = document.getElementById("inputText").value.trim();
+
+    if (text === "") {
+        alert("Please enter a message or URL first.");
+        return;
+    }
+
+    let score = 65;
+    let reasons = [];
+
+    const lower = text.toLowerCase();
+
+    if (
+        lower.includes("urgent") ||
+        lower.includes("immediately") ||
+        lower.includes("today")
+    ) {
+        score += 10;
+        reasons.push("Urgency-based language detected");
+    }
+
+    if (
+        lower.includes("otp") ||
+        lower.includes("password") ||
+        lower.includes("pin") ||
+        lower.includes("kyc")
+    ) {
+        score += 12;
+        reasons.push("Sensitive information request detected");
+    }
+
+    if (
+        lower.includes("pay") ||
+        lower.includes("payment") ||
+        lower.includes("₹") ||
+        lower.includes("rs")
+    ) {
+        score += 8;
+        reasons.push("Payment-related request detected");
+    }
+
+    if (
+        lower.includes("winner") ||
+        lower.includes("prize") ||
+        lower.includes("lottery") ||
+        lower.includes("reward")
+    ) {
+        score += 10;
+        reasons.push("Possible prize/reward scam detected");
+    }
+
+    if (
+        lower.includes("http://") ||
+        lower.includes("bit.ly") ||
+        lower.includes("tinyurl")
+    ) {
+        score += 12;
+        reasons.push("Suspicious or shortened URL detected");
+    }
+
+    if (reasons.length === 0) {
+        reasons.push("Suspicious communication pattern detected");
+        reasons.push("Further verification is recommended");
+    }
+
+    if (score > 99) score = 99;
+
+    document.getElementById("score").innerText = score + "/100";
+
+    if (currentMode === "url") {
+        document.getElementById("scamType").innerText =
+            "Suspicious URL Detected";
+    } else {
+        document.getElementById("scamType").innerText =
+            "Possible Scam Detected";
+    }
+
+    const list = document.getElementById("reasons");
+    list.innerHTML = "";
+
+    reasons.forEach(reason => {
+        const li = document.createElement("li");
+        li.innerText = reason;
+        list.appendChild(li);
+    });
+
+    document.getElementById("result").style.display = "block";
+}
+
+</script>
+
+</body>
+</html>
